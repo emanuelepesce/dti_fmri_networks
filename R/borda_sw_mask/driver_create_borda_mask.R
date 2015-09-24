@@ -27,6 +27,7 @@ pathBordaSLA2 <- "./../../data/other/borda/borda_matrix_SLA2.txt"
 pathBordaSLA3 <- "./../../data/other/borda/borda_matrix_SLA3.txt"
 
 pathMask_borda_ws_cutting <- "./../../data/other/borda/borda_mask_ws_cutting.csv"
+pathMask_borda_ws_cutting_num <- "./../../data/other/borda/borda_mask_ws_cutting_num.csv"
 pathMask_borda_ws_cutting_info <- "./../../data/other/borda/borda_mask_ws_cutting_info.csv"
 
 path_results_cutting <- "./../../data/other/borda/borda_sw_cut_objects.RData"
@@ -93,6 +94,17 @@ out <- list("e_controls" = r_Controls$n_residualEdges, "e_SLA2" = r_SLA2$n_resid
             "e_union_m_SLA2" = r2, "e_union_m_SLA3" = r3 )
 write.csv(out, file = pathMask_borda_ws_cutting_info)
 write.table(maskU,file= pathMask_borda_ws_cutting, sep="\t", col.names = F, row.names = F)
+
+# create a numeric mask (without "V" in cells)
+new_mask <- matrix(nrow = dim(maskU)[1], ncol = 2)
+for(i in 1:dim(maskU)[1]){
+    tmp <- gsub("V","", maskU[i, 1])
+    new_mask[i,1] <- as.integer(tmp)
+    tmp <- gsub("V","", maskU[i, 2])
+    new_mask[i,2] <- as.integer(tmp)
+}
+write.table(new_mask,file= pathMask_borda_ws_cutting_num, sep="\t", col.names = F, row.names = F)
+
 
 save.image(file = "driver_create_borda_mask.RData")
 

@@ -1,0 +1,3 @@
+Controllare il risultato di cutting_sw, perchè escono archi dello stesso nodo "1->1"
+
+lanciare driver borda mask
