@@ -1,3 +1,7 @@
+#' exp_threshold_borda
+#' Experiments for calculating the right cutting threshold on borda matrix
+#' It consider that matrices have to be merged at last.
+
 rm(list = ls())
 source("./../utils/graphUtils.R", chdir = T)
 source("./../strong_weak_ties_cutting/sw_cutting.R", chdir = T)

@@ -1,7 +1,13 @@
 rm(list=ls())
 library(ggplot2)
 
-load("./server_results/info_edges_0030to0065_26set2015.RData")
+# -------------------------- Inititialization ----------------------------------
+data <- "./server_results/info_edges_0030to0065_26set2015.RData"
+
+pathOut <- "./../../data/other/borda/screeplot_threshold/"
+# -------------------------- Running ----------------------------------
+
+load(data)
 
 # put values to print in a data frame
 n = 11
@@ -19,7 +25,7 @@ for(i in 1:11){
 
 df <- info_edges
 
-# ---------------------------- Ploting Screeplot--------------------------------
+# ---------------------------- Plotting Screeplot--------------------------------
 nnames <- c("strong", "weak", "total")
 # data
 p <- ggplot(df, aes(x = df$threshold, y = df$total, col = "Total"))
@@ -29,9 +35,9 @@ p <- p + geom_point(data = df, aes(x = df$threshold, y = df$weak, col = "Weak"),
 p <- p + geom_point(data = df, aes(x = df$threshold, y = df$strong, col = "Strong"),
                     size = 5) 
 # lines 
-p <- p + geom_line(aes(x= df$threshold,y=df$total, group = 1))
-p <- p + geom_line(aes(x= df$threshold,y=df$strong, group = 1)) 
-p <- p + geom_line(aes(x= df$threshold,y=df$weak, group = 1))
+p <- p + geom_line(aes(x= df$threshold,y=df$total, group = 1, col = "Total"))
+p <- p + geom_line(aes(x= df$threshold,y=df$strong, group = 1, col = "Strong")) 
+p <- p + geom_line(aes(x= df$threshold,y=df$weak, group = 1,  col = "Weak"))
 # axis
 p <- p + xlab("Threshold") + ylab("Number of edges") + ggtitle("Screeplot")
 p <- p + scale_color_discrete(name = "Legend")
@@ -40,4 +46,10 @@ p<- p + scale_x_continuous(breaks = seq(min(df$threshold), max(df$threshold), by
 
 p <- p + scale_y_continuous(breaks = seq(0, 8100, by = 500))
 
+
+pathToSave <- paste(pathOut, "screeplot_30_80_by5.jpeg", sep = "")
+# ggsave(file=fileOut, width = 25, height = 15, units = "cm")
+jpeg(filename = pathToSave, width = 1200, height = 550)
 p
+dev.off()
+

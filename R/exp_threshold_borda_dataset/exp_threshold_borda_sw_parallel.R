@@ -1,3 +1,7 @@
+#' exp_threshold_borda_parallel
+#' Experiments for calculating the right cutting threshold on borda matrix
+#' It consider that matrices have to be merged at last.
+
 rm(list = ls())
 library("parallel")
 # library("foreach")
