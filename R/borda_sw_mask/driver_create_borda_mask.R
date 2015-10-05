@@ -1,4 +1,4 @@
-#' borda_extracting_mask
+#' driver_create_borda_mask
 #' 
 #' Generate borda mask.
 #' After we have taken the result of borda voting, and after we have done the

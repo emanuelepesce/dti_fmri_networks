@@ -5,6 +5,7 @@ library(ggplot2)
 data <- "./server_results/info_edges_0030to0065_26set2015.RData"
 
 pathOut <- "./../../data/other/borda/screeplot_threshold/"
+nameFileOut <- "screeplot_30_80_by5.jpeg"
 # -------------------------- Running ----------------------------------
 
 load(data)
@@ -12,7 +13,7 @@ load(data)
 # put values to print in a data frame
 n = 11
 info_edges <- data.frame()
-for(i in 1:11){
+for(i in 1:n){
   tmp  <-data.frame(threshold = results[[i]]$threshold, 
                     total = results[[i]]$total,
                     strong = results[[i]]$strong,
@@ -47,7 +48,7 @@ p<- p + scale_x_continuous(breaks = seq(min(df$threshold), max(df$threshold), by
 p <- p + scale_y_continuous(breaks = seq(0, 8100, by = 500))
 
 
-pathToSave <- paste(pathOut, "screeplot_30_80_by5.jpeg", sep = "")
+pathToSave <- paste(pathOut, nameFileOut, sep = "")
 # ggsave(file=fileOut, width = 25, height = 15, units = "cm")
 jpeg(filename = pathToSave, width = 1200, height = 550)
 p
