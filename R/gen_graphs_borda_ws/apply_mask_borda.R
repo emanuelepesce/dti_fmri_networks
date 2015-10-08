@@ -55,9 +55,10 @@ apply_mask <-function(graph, mask){
 #'                 written
 #' @param pathMask pathMask, path of the mask to apply
 #' @param form, format of the graph to manage
-gen_graphs_borda_sw <- function(pathIn, pathOut, pathMask, form = "graphml"){
+gen_graphs_borda_sw <- function(pathIn, pathOut, pathMask, form = "graphml",
+                                header = F){
   # get the mask
-  mask <- read.csv(file = pathMask, sep = "\t")
+  mask <- read.csv(file = pathMask, sep = "\t", header=header)
   mask <- as.matrix(mask)
   
   # take all files in pathIn which have the right format

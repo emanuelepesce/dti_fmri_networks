@@ -37,7 +37,7 @@ t_test_edges_cutting <- function(pathIn, tmu = 0,  tr = 0.05, verbose = 1,
   
   for(i in 1:length(files_names)) { # for each file 
     cfile <- paste(pathIn, files_names[i], sep="") # get complete name (including path)
-    g <- read.graph(cfile, format = form)    # Recupero il grafo di questo file
+    g <- read.graph(cfile, format = form)          # get the graph
     list_graphs[[k]] <- g
     k <- k + 1    
   }
@@ -75,10 +75,17 @@ t_test_edges_cutting <- function(pathIn, tmu = 0,  tr = 0.05, verbose = 1,
         }
         
         # Performing the t-test on a single edge
-        tt <- t.test(unlist(l_dti_values), mu = tmu)
-        l_pvalues[kp] <- tt$p.value
-        list_edges <- insertRow(list_edges, kp, c(vi,vj))
-        kp <- kp + 1
+        tt <-  try(t.test(unlist(l_dti_values), mu = tmu), silent = TRUE)
+        if(!is(tt, "try-error")){
+          l_pvalues[kp] <- tt$p.value
+          list_edges <- insertRow(list_edges, kp, c(vi,vj))
+          kp <- kp + 1
+        }
+        else{
+          l_pvalues[kp] <- 1
+          list_edges <- insertRow(list_edges, kp, c(vi,vj))
+          kp <- kp + 1
+        }
       } 
     } # end for j
   }# end for i
@@ -96,6 +103,16 @@ t_test_edges_cutting <- function(pathIn, tmu = 0,  tr = 0.05, verbose = 1,
   
   return(res) 
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

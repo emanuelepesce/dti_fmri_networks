@@ -40,9 +40,12 @@ sw_cutting <- function(graph, threshold=0.5, invert = FALSE, flow=0){
   ### shortest path
   ### it only works if invert is equal to FALSE
   if(invert==TRUE){
-    e_weights <- E(graph)$weight 
-    ne_weights <- (e_weights-min(e_weights))/(max(e_weights)-min(e_weights))
-    E(graph)$weight  <- 1 - ne_weights
+#     e_weights <- E(graph)$weight 
+#     ne_weights <- (e_weights-min(e_weights))/(max(e_weights)-min(e_weights))
+#     E(graph)$weight  <- 1 - ne_weights
+  
+      e_weights <- E(graph)$weight 
+      E(graph)$weight  <- 1 - e_weights
   }
     
   ### inizialize list of edges

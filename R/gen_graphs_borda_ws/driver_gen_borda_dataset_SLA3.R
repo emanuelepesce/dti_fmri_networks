@@ -14,9 +14,9 @@ if(verbose > 0){
 
 pathIn_Controls <- "./../../data/graphs_integration/full_connected/SLA3/"
 
-pathIn_mask <- "./../../data/other/borda/borda_mask_ws_cutting_num.csv"
+pathIn_mask <- "./../../data/other/borda/threshold_0dot04/borda_mask_ws_cutting_num.csv"
 
-pathOut <- "./../../data/graphs_integration/borda_sw/SLA3/"
+pathOut <- "./../../data/graphs_integration/borda_sw_004/SLA3/"
 
 # -------------------------- Running -------------------------------------------
 ptm <- proc.time()

@@ -26,11 +26,16 @@ pathBordaControls <- "./../../data/other/borda/borda_matrix_controls.txt"
 pathBordaSLA2 <- "./../../data/other/borda/borda_matrix_SLA2.txt"
 pathBordaSLA3 <- "./../../data/other/borda/borda_matrix_SLA3.txt"
 
-pathMask_borda_ws_cutting <- "./../../data/other/borda/borda_mask_ws_cutting.csv"
-pathMask_borda_ws_cutting_num <- "./../../data/other/borda/borda_mask_ws_cutting_num.csv"
-pathMask_borda_ws_cutting_info <- "./../../data/other/borda/borda_mask_ws_cutting_info.csv"
+# path outputs, change directory if you change threshold
+pathOut <- "./../../data/other/borda/threshold_0dot04/"
 
-path_results_cutting <- "./../../data/other/borda/borda_sw_cut_objects.RData"
+pathMask_borda_ws_cutting <- paste(pathOut, "borda_mask_ws_cutting.csv", sep = "")
+pathMask_borda_ws_cutting_num <- paste(pathOut, "borda_mask_ws_cutting_num.csv", sep = "")
+pathMask_borda_ws_cutting_info <- paste(pathOut, "borda_mask_ws_cutting_info.csv", sep = "")
+
+path_results_objects <- paste(pathOut, "borda_sw_cut_objects.RData", sep = "")
+
+tr = 0.04
 
 # -------------------------- Running -------------------------------------------
 ptm <- proc.time()
@@ -44,21 +49,21 @@ g_SLA2 <- i_adjacencyFromFile(pathBordaSLA2)
 g_SLA3 <- i_adjacencyFromFile(pathBordaSLA3)
 
 # compute residuals
-r_Controls <- sw_cutting(g_Controls, threshold = 0.05, flow = 0)
+r_Controls <- sw_cutting(g_Controls, threshold = tr, flow = 0)
 if(verbose > 0){
   print("r_Controls complete")
 }
-r_SLA2 <- sw_cutting(g_SLA2, threshold = 0.05, flow = 0)
+r_SLA2 <- sw_cutting(g_SLA2, threshold = tr, flow = 0)
 if(verbose > 0){
   print("r_Controls complete")
 }
-r_SLA3 <- sw_cutting(g_SLA3, threshold = 0.05, flow = 0)
+r_SLA3 <- sw_cutting(g_SLA3, threshold = tr, flow = 0)
 if(verbose > 0){
   print("r_Controls complete")
 }
 
 # save 
-save(r_Controls, r_SLA2, r_SLA3, file = path_results_cutting)
+save(r_Controls, r_SLA2, r_SLA3, file = path_results_objects)
 
 residual_Controls <- r_Controls$residualGraph
 residual_SLA2 <- r_SLA2$residualGraph
@@ -106,7 +111,7 @@ for(i in 1:dim(maskU)[1]){
 write.table(new_mask,file= pathMask_borda_ws_cutting_num, sep="\t", col.names = F, row.names = F)
 
 
-save.image(file = "driver_create_borda_mask.RData")
+save.image(file = paste(pathOut, "driver_create_borda_mask.RData", sep =""))
 
 time  <- proc.time() - ptm
 print(time)

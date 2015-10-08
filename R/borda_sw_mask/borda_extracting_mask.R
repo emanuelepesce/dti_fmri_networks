@@ -54,56 +54,6 @@ unionMask <- function(gC, gP){
   u_edges <- rbind(edgesC, edgesP)
   u_edges <- unique(u_edges)
   
-#   # union: first find edges in patients which are not in controls and then merge
-#   #        in order to avoid repetitions
-#   indicesP = c()
-#   for (i in 1:dim(edgesP)[1]){
-#     v1 = edgesP[i,1]
-#     v2 = edgesP[i,2]
-#     find = 0
-#     for (j in 1:dim(edgesC)[1]){
-#       # if an edge of P is in C save it and after add it
-#       if((v1 == edgesC[j,1]) && (v2 == edgesC[j,2])){ 
-#         find = 1
-#       }
-#       if(find == 1) break
-#     }
-#     if(find == 0){ # element i in P is not in C
-#       indicesP <- c(indicesP, i)
-#     }
-#   }
-#   
-#   
-#   n_row <- dim(new_edges)[1]
-#   m <- matrix(nrow = n_row, ncol = 2)
-#   for(i in 1:dim(edgesC)[1]){
-#     m[i, 1] <- edgesC[i, 1]
-#     m[i, 2] <- edgesC[i, 2]
-#   }
-#   j = 0
-#   for(i in (dim(edgesC)[1]+1):n_row){
-#     print(j)
-#     j = j + 1
-#     m[i, 1] <- edgesP[indicesP[j], 1]
-#     m[i, 2] <- edgesP[indicesP[j], 2]
-#   }
-#   
-#   # take all edges in controls and indicesP
-#   # indicesP contains edges in patients which are not in controls
-#   n_row <- length(indicesP) + dim(edgesC)[1]
-#   m <- matrix(nrow = n_row, ncol = 2)
-#   for(i in 1:dim(edgesC)[1]){
-#     m[i, 1] <- edgesC[i, 1]
-#     m[i, 2] <- edgesC[i, 2]
-#   }
-#   j = 0
-#   for(i in (dim(edgesC)[1]+1):n_row){
-#     print(j)
-#     j = j + 1
-#     m[i, 1] <- edgesP[indicesP[j], 1]
-#     m[i, 2] <- edgesP[indicesP[j], 2]
-#   }
-  
   return(u_edges)
 }
 
