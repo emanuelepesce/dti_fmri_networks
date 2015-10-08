@@ -9,9 +9,7 @@
 #' Author: Emanuele Pesce
 
 rm(list=ls())
-source("./attachLabelsSW.R", chdir = T)
-source("./../../strong_weak_ties_cutting/sw_cutting.R", chdir = T)
-
+source("./../../gen_graphs/sw_labels/attachLabelsSW.R", chdir = T)
 # -------------------------- Inititialization ----------------------------------
 verbose = 1
 if(verbose > 0){
@@ -24,7 +22,7 @@ path_borda_sla3 <- "./../../../data/other/borda/borda_matrix_SLA3.txt"
 
 pathIn_data <- "./../../../data/other/borda/threshold_0dot04/borda_sw_cut_objects.RData"
 
-pathTarget <- "./../../../data/graphs_integration/full_connected/Controls/"
+pathTarget <- "./../../../data/graphs_integration/borda_sw_004/Controls/"
 
 # -------------------------- Running -------------------------------------------
 ptm <- proc.time()

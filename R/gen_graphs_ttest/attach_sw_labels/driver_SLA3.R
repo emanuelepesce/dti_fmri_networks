@@ -9,8 +9,7 @@
 #' Author: Emanuele Pesce
 
 rm(list=ls())
-source("./attachLabelsSW.R", chdir = T)
-source("./../../strong_weak_ties_cutting/sw_cutting.R", chdir = T)
+source("./../../gen_graphs/sw_labels/attachLabelsSW.R", chdir = T)
 
 # -------------------------- Inititialization ----------------------------------
 verbose = 1
@@ -22,9 +21,9 @@ path_borda_controls <- "./../../../data/other/borda/borda_matrix_controls.txt"
 path_borda_sla2 <- "./../../../data/other/borda/borda_matrix_SLA2.txt.txt"
 path_borda_sla3 <- "./../../../data/other/borda/borda_matrix_SLA3.txt"
 
-pathIn_data <- "./../../../data/other/borda/threshold_0dot04/borda_sw_cut_objects.RData"
+pathIn_data <- "./../../../data/other/t_test_005/t_test_sw_cut_objects.RData"
 
-pathTarget <- "./../../../data/graphs_integration/full_connected/Controls/"
+pathTarget <- "./../../../data/graphs_integration/ttest_005/SLA3/"
 
 # -------------------------- Running -------------------------------------------
 ptm <- proc.time()
@@ -39,12 +38,9 @@ ptm <- proc.time()
 load(pathIn_data)
 
 # get labels
-lab_controls <- getLabels(r_Controls)
-lab_sla2 <- getLabels(r_SLA2)
-lab_sla3 <- getLabels(r_SLA3)
+labels <- getLabels(RC)
 
-applyAttachLabel(pathTarget, pathTarget, lab_controls, lab_sla2, lab_sla3)
-
+applyAttachLabel(pathTarget, pathTarget, labels, labels, labels)
 
 # =============== check MST mask ====================
 #   cnt <- 0

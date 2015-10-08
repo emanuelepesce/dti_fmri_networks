@@ -21,6 +21,7 @@ pathOut_graphToCut <- paste(pathOut, "graph_to-cut.graphml", sep = "")
 pathOut_residualGraph <- paste(pathOut, "residualGraph_cutted.graphml", sep="") 
 pathOut_mask_ttest <- paste(pathOut, "mask_ttest_cutted.csv", sep ="") 
 pathOut_mask_ttest_num <- paste(pathOut, "mask_ttest_cutted.csv", sep ="") 
+pathOut_sw_cut_obj <- paste(pathOut, "t_test_sw_cut_objects.RData", sep = "")
 
 # ------------------------ Running ---------------------------------------------
 
@@ -43,6 +44,7 @@ write.graph(graph = gToCut, file = pathOut_graphToCut, format = "graphml")
 
 # cut 0.05
 RC <- sw_cutting(gToCut, threshold = 0.04, invert = F)
+save(RC, file = pathOut_sw_cut_obj)
 write.graph(graph = RC$residualGraph, file = pathOut_residualGraph, format = "graphml")
 write.csv(as.matrix(get.edgelist(RC$residualGraph)),
             file = pathOut_mask_ttest ,row.names = F)
