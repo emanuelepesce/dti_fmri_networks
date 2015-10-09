@@ -1,7 +1,16 @@
 rm(list=ls())
 library(igraph)
 
-#' 
+#' Take all graphs from all dataset and calculate the mean value for each edge.
+#' Note: since mean didn't work, currently it calculate variance instead of mean.
+#' @param pathInc, path controls
+#' @param pathInS2, path sla2
+#' @param pathInS3, path sla3
+#' @param pathMask, path of the mask
+#' @param form, format of the graphs to read
+#' @param verbose, if 1 able check prints
+#' @return g, a graph which have the edge of the passed mask. Each value of the
+#'          edges is the mean of the values of all graphs for that edge.
 maskMean <- function(pathInC, pathInS2, pathInS3, pathMask, 
                     form = "graphml", verbose=1){
   

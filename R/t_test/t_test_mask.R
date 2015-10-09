@@ -17,7 +17,6 @@ library(miscTools)
 #' pathIn <-  "./../../data/graphs_integration/full_connected/Controls/"
 #' res <- t_test_edges_cutting(pathIn)
 #' write.table(res$selected_edges, file = pathOut, sep=",", col.names = F, row.names = F)
-
 t_test_edges_cutting <- function(pathIn, tmu = 0,  tr = 0.05, verbose = 1, 
                                  form = "graphml") {
 
@@ -110,11 +109,7 @@ t_test_edges_cutting <- function(pathIn, tmu = 0,  tr = 0.05, verbose = 1,
 
 
 
-
-
-
-
-
+#----- Not used anymore
 
 # Compute the mask's union
 makeUnion <- function(ctrl, pznt) {
