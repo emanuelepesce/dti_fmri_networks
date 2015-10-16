@@ -4,7 +4,7 @@
 #' 
 #' Author: Emanuele Pesce
 rm(list = ls())
-source("./apply_mask_borda.R", chdir = T)
+source("./../utils/apply_mask.R", chdir = T)
 
 # -------------------------- Inititialization ----------------------------------
 verbose = 1
@@ -25,7 +25,7 @@ if(verbose > 0){
   print("Running..")
 }
 
-gen_graphs_borda_sw(pathIn_Controls, pathOut, pathIn_mask)
+gen_graphs(pathIn_Controls, pathOut, pathIn_mask)
 
 t <- proc.time() - ptm
 print(t)
