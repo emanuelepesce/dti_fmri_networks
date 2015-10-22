@@ -54,7 +54,7 @@ spinglass_dir <- function(pathIn, pathOut, form = "graphml", type_weights = "fmr
     
     # infomap clustering
     w <- get.edge.attribute(graph = g, name = type_weights, index = E(g))
-    info <- spinglass.community(graph = g, weights=w,  spins = maxSpins, 
+    info <- spinglass.community(graph = g, weights = w,  spins = maxSpins, 
                                      implementation = "neg")
     
     # membership

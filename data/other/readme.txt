@@ -1,0 +1,1 @@
+matrix_all_edges: contains a matrix object with all edges values (dti). Rows are the edges and columns the subjects.

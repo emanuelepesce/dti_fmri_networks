@@ -73,6 +73,7 @@ specc_dir <- function(pathIn, pathOut, form = "graphml", centers = 10,
     # get adjacency matrix and turn it into a matrix format
     MA <- get.adjacency(ugm, attr = type_weights)
     M <- as.matrix(MA)
+    
     # append in list names
     listNames <- c(listNames, files[i])
 
