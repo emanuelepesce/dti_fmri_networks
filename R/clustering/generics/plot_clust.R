@@ -1,6 +1,7 @@
 library(igraph)
 
-plot_clust <- function(m, k = 10, graph, pathOut2d, pathOut3d, verbose = FALSE) {
+plot_clust <- function(m, k = 10, graph, pathOut2d, pathOut3d, verbose = FALSE, 
+                       saveResult = F) {
   
   # get coordinates
   x <- V(g)$cx
@@ -17,7 +18,7 @@ plot_clust <- function(m, k = 10, graph, pathOut2d, pathOut3d, verbose = FALSE) 
   hc <- hclust(dm)
   hcc <- cutree(hc, k = k)
   hcc <- as.vector(hcc)
-  
+    
   # colors 
   cl <- brewer.pal(k,name = "RdYlBu")
   hccc <- hcc
