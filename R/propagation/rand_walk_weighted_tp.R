@@ -10,15 +10,17 @@ library(igraph)
 #' @param weights, vector of edge weight values to consider, it has to be the 
 #'                 same length of the number of edges
 #' @param seed, vertex where the walker has to start
+#' @param toTel, number of iteration to do before to teleport in a random vertex
 #' @example 
 #' p_graph <- "./../../data/graphs_integration/borda_sw_004/Controls/CTRL_amore.graphml"
 #' g <- read.graph(p_graph, format= "graphml")
-#' w <- abs(E(g)$fmri)
-#' res <- rand_walk_weighted(g, w, 19, maxiter = 2000)
-rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
+#' w <- E(g)$fmri
+#' res <- rand_walk_weighted(g, w, 1, 50)
+rand_walk_weighted_tp <- function(graph, weights, seed, toTel = 45){
 
   v_visited <- vector()   # visited vertices
   v_history <- vector()   # sequence of visited vertices
+  teleports <- 0          # number of teleports 
   
   nv <- vcount(graph)
   walker <- seed 
@@ -32,9 +34,7 @@ rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
   graph <- set.edge.attribute(graph, name = "tmp", index = E(graph), weights)
   
   cnt <- 0 
-  while( (length(v_visited) < 90) && (cnt <= maxiter) ){
-    cnt <- cnt + 1
-    
+  while(length(v_visited) < 90){    
     # update history
     v_history <- c(v_history, walker)
     
@@ -47,9 +47,16 @@ rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
     neighs <- incident(graph, mode = "out", v = walker)
     n_neighs <- length(neighs)
     
-    # if there are no neighbors stop it
+    # if there are no neighbors do a teleport
     if(n_neighs < 1){
-      cnt = maxiter
+      walker = sample(1:nv, 1)
+      teleports = teleports + 1
+    }
+    # if there were toTel iteration without finding out new vertices
+    else if (cnt >= toTel){
+      walker = sample(1:nv, 1)
+      teleports = teleports + 1
+      cnt = 0
     }
     else{
       # get neighbors weights
@@ -73,14 +80,15 @@ rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
   } # end while
   
   toRtrn <- list("visited" = v_visited,
-                 "history" = v_history
+                 "history" = v_history,
+                 "teleports" = teleports                
                  )
   
 } # end function
 
 
 
-rand_walk_weighted_dir <- function(pathIn, pathOut, form, times, maxiter, seed,
+rand_walk_weighted_tp_dir <- function(pathIn, pathOut, form, times, toTel, seed,
                                    verbose = 1){
   
   # pattern to match
@@ -90,7 +98,6 @@ rand_walk_weighted_dir <- function(pathIn, pathOut, form, times, maxiter, seed,
   files <- list.files(path = pathIn, pattern = patt) 
   
   toRtrn_steps <- vector(mode = "numeric", length = length(files))
-  toRtrn_nvisited <- vector(mode = "numeric", length = length(files))
   
   for(i in 1:length(files)) {
     
@@ -108,20 +115,19 @@ rand_walk_weighted_dir <- function(pathIn, pathOut, form, times, maxiter, seed,
     
     # run random walk
     v_steps <- vector(mode = "numeric", length = times)
-    v_nvisited <- NULL
+    v_teleports <- vector(mode = "numeric", length = times)
     v_visited <- list()
     for (t in 1:times){
       print(t)
-      r_tmp <- rand_walk_weighted(g, w, seed, maxiter)
+      r_tmp <- rand_walk_weighted_tp(g, w, seed, toTel)
       v_steps[t] <- length(r_tmp$history)
+      v_teleports[t] <- r_tmp$teleports
       v_visited <- c(v_visited, r_tmp$visited)
-      v_nvisited <- c(v_nvisited, length(v_visited))
     } # end for t
     
-    toRtrn_nvisited[i] <- mean(v_nvisited) 
     toRtrn_steps[i] <- mean(v_steps)
   } # end for i
   
-  toRtrn <- list("nsteps" = toRtrn_steps, "nvisited" = toRtrn_nvisited)
+  return(toRtrn_steps)
 }# end function
 

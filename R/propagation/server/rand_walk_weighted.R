@@ -80,30 +80,24 @@ rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
 
 
 
-rand_walk_weighted_dir <- function(pathIn, pathOut, form, times, maxiter, seed,
+rand_walk_weighted_dir <- function(graphs, pathOut = "", form, times, maxiter, seed,
                                    verbose = 1){
   
-  # pattern to match
-  patt = paste("*.", form, sep = "") 
+  ng <- length(graphs)
+  toRtrn_steps <- vector(mode = "numeric", length = ng)
+  toRtrn_nvisited <- vector(mode = "numeric", length = ng)
   
-  # take all files in pathIn
-  files <- list.files(path = pathIn, pattern = patt) 
-  
-  toRtrn_steps <- vector(mode = "numeric", length = length(files))
-  toRtrn_nvisited <- vector(mode = "numeric", length = length(files))
-  
-  for(i in 1:length(files)) {
+  for(i in 1:ng) {
     
-    cfile <- paste(pathIn, files[i], sep="")
+    # read the graph 
+    g <- graphs[[i]]
     
     # check print
     if (verbose) {
       print ("Subject:")
-      print (cfile)
+      print (g$subject)
     }
     
-    # read the graph 
-    g <- read.graph(cfile, format = form) 
     w <- abs(E(g)$fmri)
     
     # run random walk

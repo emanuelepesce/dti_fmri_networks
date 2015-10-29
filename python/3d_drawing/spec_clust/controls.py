@@ -36,6 +36,6 @@ k = max(communities)
 for i in xrange(len(communities)):
     communities[i] = communities[i]/k
 
-pl.my_plot_network_3d(G.edges(), coords, communities, north_west_flag = True)
+pl.my_plot_network_3d(G.edges(), coords, communities,north_west_flag = True)
 
 
