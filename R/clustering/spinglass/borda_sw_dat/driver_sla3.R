@@ -17,6 +17,7 @@ for(nc in kmin:kmax){
   
   pathOut_base <- paste("./../../../../data/results/spinglass/", nc, "/borda_sw_004/", sep ="")
   
+  pathOut_coOc <- paste(pathOut_base, "coOc_sla3.csv", sep ="")
   pathOut_mem <- paste(pathOut_base, "membership_sla3.csv", sep ="")
   pathOut_heat <- paste(pathOut_base, "heatmap_sla3.jpeg", sep ="")
   pathOut_graph3D <- paste(pathOut_base, "graph3d_sla3.jpeg", sep ="")
@@ -25,7 +26,7 @@ for(nc in kmin:kmax){
   tmain = "Heatmap sla3"
   
   # --------------------------- Definition ---------------------------------------
-  mem_matrix <- spinglass_dir(pathIn_graphs, pathOut_mem)
+  mem_matrix <- specc_dir(pathIn_graphs, pathOut_coOc)
   
   # remove the first two columns (vertices and roiNames values)
   m <- mem_matrix[,-(1:2)]
@@ -40,6 +41,7 @@ for(nc in kmin:kmax){
   
   # plot graphs
   g <- read.graph(pathIn_exampleGraph, format = "graphml")
-  plot_clust(coOc_m, nc, g, pathOut_graph2D, pathOut_graph3D)
+  H <- makeHeatmap(coOc_m, pathOut = pathOut_heat, tmain = tmain)
+  plot_clust(coOc_m, nc, g, pathOut_graph2D, pathOut_graph3D, pathOutMem = pathOut_mem )
   
 }

@@ -24,7 +24,7 @@ library(RColorBrewer)
 #'          the index of the vertices, on the second column there are the names
 #'          of the corresponding roi regions, and after for each file the result
 #'          of the clustering.
-spinglass_dir <- function(pathIn, pathOut, form = "graphml", type_weights = "fmri",
+specc_dir <- function(pathIn, pathOut, form = "graphml", type_weights = "fmri",
                         maxSpins = 11, verbose = TRUE) {
   
   # initialization

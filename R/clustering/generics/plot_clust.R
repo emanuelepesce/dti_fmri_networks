@@ -1,7 +1,18 @@
 library(igraph)
 
+#' Compute result of clustering from a cooccurence matrix
+#' First calculate membership matrix from a cooccurence matrix and then save
+#' results
+#' @param m: cooccurence matrix
+#' @param k: number of clusters
+#' @param graph: a graph in igraph format
+#' @param pathOut2d: path where to save the output in 2d
+#' @param pathOut3d: path where to save the output in 3d
+#' @param verbose: if TRUE print information for testing
+#' @param saveMembership: if TRUE save the membership vector 
+#' @param pathOutMem: path where to save memebership vector
 plot_clust <- function(m, k = 10, graph, pathOut2d, pathOut3d, verbose = FALSE, 
-                       saveResult = F) {
+                       pathOutMem, saveMembership = T) {
   
   # get coordinates
   x <- V(g)$cx
@@ -18,7 +29,11 @@ plot_clust <- function(m, k = 10, graph, pathOut2d, pathOut3d, verbose = FALSE,
   hc <- hclust(dm)
   hcc <- cutree(hc, k = k)
   hcc <- as.vector(hcc)
-    
+  
+  if(saveMembership == T){
+    write.table(hcc, pathOutMem, row.names = F, col.names = F)
+  }
+  
   # colors 
   cl <- brewer.pal(k,name = "RdYlBu")
   hccc <- hcc
