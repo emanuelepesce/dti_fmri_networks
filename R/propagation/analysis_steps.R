@@ -6,61 +6,71 @@ pathIn_S2 <- "./../../data/results/propagation/mean_steps/borda_sw_004/res_frequ
 pathIn_S3 <- "./../../data/results/propagation/mean_steps/borda_sw_004/res_frequency_SLA3.RData"
 
 meanSteps <- NULL
-
+sdSteps <- NULL
 # controls
 load(pathIn_C)
 
 # get nsteps and uvisted
-udata <- unlist(data)
+udataC <- unlist(data)
 
-nsteps <- NULL
+nstepsC <- NULL
 nvisited <- NULL
 
-for (i in 1:length(udata)){
+for (i in 1:length(udataC)){
   if(i%%2==0){
-    nvisited <- c(nvisited, udata[i])
+    nvisited <- c(nvisited, udataC[i])
   }
   else{
-    nsteps <- c(nsteps, udata[i])
+    nstepsC <- c(nstepsC, udataC[i])
   }
 }
 
-meanSteps <- c(meanSteps, mean(nsteps))
+meanSteps <- c(meanSteps, mean(nstepsC))
+sdSteps <- c(sdSteps, sd(nstepsC))
 
 # sla 2
 load(pathIn_S2)
 
 # get nsteps and uvisted
-udata <- unlist(data)
+udataS2 <- unlist(data)
 
-nsteps <- NULL
+nstepsS2 <- NULL
 nvisited <- NULL
 
-for (i in 1:length(udata)){
+for (i in 1:length(udataS2)){
   if(i%%2==0){
-    nvisited <- c(nvisited, udata[i])
+    nvisited <- c(nvisited, udataS2[i])
   }
   else{
-    nsteps <- c(nsteps, udata[i])
+    nstepsS2 <- c(nstepsS2, udataS2[i])
   }
 }
-meanSteps <- c(meanSteps, mean(nsteps))
+meanSteps <- c(meanSteps, mean(nstepsS2))
+sdSteps <- c(sdSteps, sd(nstepsS2))
+
 
 # sla 3
 load(pathIn_S3)
 
 # get nsteps and uvisted
-udata <- unlist(data)
+udataS3 <- unlist(data)
 
-nsteps <- NULL
+nstepsS3 <- NULL
 nvisited <- NULL
 
-for (i in 1:length(udata)){
+for (i in 1:length(udataS3)){
   if(i%%2==0){
-    nvisited <- c(nvisited, udata[i])
+    nvisited <- c(nvisited, udataS3[i])
   }
   else{
-    nsteps <- c(nsteps, udata[i])
+    nstepsS3 <- c(nstepsS3, udataS3[i])
   }
 }
-meanSteps <- c(meanSteps, mean(nsteps))
+meanSteps <- c(meanSteps, mean(nstepsS3))
+sdSteps <- c(sdSteps, sd(nstepsS3))
+
+
+hist(nstepsC, breaks = 5)
+hist(nstepsS2, breaks = 5)
+hist(nstepsS3, breaks = 5)
+
