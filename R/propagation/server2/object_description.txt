@@ -1,0 +1,6 @@
+a result object (res_ctrl.RData) is so composed:
+- $f_edge: frequency of edges
+- $sbj_history: list of length sbj
+		- sbj_history[[i]]: list of vectors, a vector rapresent an explored path by the random walk
+- $sbj_times: matrix of times, row = subjects, col = run of randomwalk
+- $sbj_order: matrix of orders, row = subjects, col = run of randomwalk
