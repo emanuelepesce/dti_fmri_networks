@@ -1,0 +1,28 @@
+rm(list = ls())
+source("./rw_propagation.R", chdir = T)
+
+pathIn.ctrl <- "./../../../data/graphs_integration/borda_sw_004/igraphs_controls.RData"
+pathIn.sla2 <- "./../../../data/graphs_integration/borda_sw_004/igraphs_SLA2.RData"
+pathIn.sla3 <- "./../../../data/graphs_integration/borda_sw_004/igraphs_SLA3.RData"
+
+times <- 20
+seed <- 1
+maxiter <- 4000
+nc <- 3
+
+pathOutC <- "prop_ctrl_dti_r1.RData"
+pathOutS2 <- "prop_sla2_dti_r1.RData"
+pathOutS3 <- "prop_sla3_dti_r1.RData"
+
+
+time.start <- proc.time()
+
+
+cl <- makeCluster(nc)
+driver_exp(cl, seed, times, maxiter, pathIn.ctrl, "c", pathOutC)
+driver_exp(cl, seed, times, maxiter, pathIn.sla2, "s2", pathOutS2)
+driver_exp(cl, seed, times, maxiter, pathIn.sla3, "s3", pathOutS3)
+stopCluster(cl)
+
+
+time.used <- proc.time() - time.start

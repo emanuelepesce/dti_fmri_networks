@@ -10,7 +10,7 @@ pathIn.graph <- "./../../data/results/borda_example_graph.graphml"
 path.base <- "./../../data/results/spec_clust/"
 
 # =========================== borda  ===========================================
-dirs_1 <-list.files(path.base)
+dirs_1 <-list.files(path.base, patt = "^cut_histo")
 for(d in dirs_1){
   pathIn.dir <- paste(path.base, d, "/borda_sw_004/", sep = "")
   pathOut.dir <- paste(path.base ,d, "/borda_sw_004/brain_net/", sep = "")
