@@ -1,6 +1,7 @@
 rm(list=ls())
 library(igraph)
 library(TopKLists)
+library(miscTools)
 
 # ==== definitions ====
 path.base <- "./../../data/results/propagation/rand_walk_complete/borda_sw_004/server_fmri_complete_r1/"
@@ -9,9 +10,9 @@ pathIn.sla2 <- paste(path.base, "res_sla2.RData", sep = "")
 pathIn.sla3 <- paste(path.base, "res_sla3.RData", sep = "")
 
 
-pathIn.ctrl <- "./server3/prop_ctrl_dti_r1.RData"
-pathIn.sla2 <- "./server3/prop_sla2_dti_r1.RData"
-pathIn.sla3 <- "./server3/prop_sla3_dti_r1.RData"
+pathIn.ctrl <- "./random_walk/prop_ctrl_dti_r1.RData"
+pathIn.sla2 <- "./random_walk/prop_sla2_dti_r1.RData"
+pathIn.sla3 <- "./random_walk/prop_sla3_dti_r1.RData"
 
 
 pathIn.graph_ex <- ("./../../data/results/borda_example_graph.graphml")
@@ -102,7 +103,7 @@ average_walk <- function(obj, exgraph){
 calculate_order <- function(path){
   n <- length(path)
   visited <- vector(mode = "numeric")
-
+  
   for(i in 1:n){
     if(!(path[i] %in% visited)){
       visited <- c(visited, path[i])
@@ -111,6 +112,33 @@ calculate_order <- function(path){
   }
   return(visited)
 }
+
+time_matrix <- function(obj){
+  
+  time.sbj <- vector(length = 90, mode = "numeric") 
+
+  for(sbj in 1:length(obj)){
+    for(walk in 1:length(obj[[sbj]])){
+      cur <- obj[[sbj]][[walk]]
+      for (reg in 1:90){
+        idx <- which( cur == reg)
+        idx <- idx[1]
+        time.sbj[reg] <- idx
+      }
+    }
+    time.sbj <- time.sbj/length(obj[[sbj]])
+    if(sbj == 1){
+      M <- as.matrix(t(time.sbj))
+    }
+    else{
+      M <- insertRow(M, sbj, time.sbj)
+    }
+  }
+  return(colMeans(M))
+}
+
+time_matrix(res.prop[[1]]$sbj_history)
+
 
 # ==== propagation time ====
 mean.groups <- vector(mode = "numeric", length = 3)
@@ -146,4 +174,4 @@ df.avgwalk <- data.frame(avgwalk.groups[[1]]$Area,
 
 colnames(df.avgwalk) <- c("Controls", "Sla2", "Sla3")
 
-save.image(file = pathOut.obj)
+# save.image(file = pathOut.obj)

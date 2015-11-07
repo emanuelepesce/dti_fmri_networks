@@ -77,7 +77,7 @@ rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
 myRandWalk <- function(idx, graphs, seed, times, maxiter = 4000){
   
   graph <- graphs[[idx]]
-  w <- abs(E(graph)$fmri)
+  w <- abs(E(graph)$dti)
   f_edge <- rep(0, length = ecount(graph))
   
   
