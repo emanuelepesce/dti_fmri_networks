@@ -15,7 +15,7 @@ rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
   if(length(weights) != ecount(graph)){
     return(-1)
   }
-  
+    
   # set attribute
   graph <- set.edge.attribute(graph, name = "tmp", index = E(graph), weights)
   
@@ -77,14 +77,13 @@ rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
 myRandWalk <- function(idx, graphs, seed, times, maxiter = 4000){
   
   graph <- graphs[[idx]]
+  w <- abs(E(graph)$fmri)
   f_edge <- rep(0, length = ecount(graph))
   
-  # ===== Here choose weights =====
-  w.fmri <- abs(E(graph)$fmri)
-  w.dti <- E(graph)$dti
-  w <- w.fmri * w.dti
-  
-  
+  ug <- set.edge.attribute(graph, name = "tmp_att", index = E(graph), value = w)
+  ug <- as.undirected(ug, mode = "each", edge.attr.comb = list(tmp_att= "mean", "ignore"))
+  graph <- ug
+  w <- E(graph)$tmp_att
   
   # run random walk
   v_times <- vector(mode = "numeric", length = times)
@@ -169,5 +168,19 @@ driver_exp <- function(cl, seed, times, maxiter, pathIn, group, pathOut){
   save(data.prop, file = pathOut)
 }
 
+pathIn.sla3 <- "./../../../data/graphs_integration/sign_test/igraphs_SLA3.RData"
+load(pathIn.sla3)
+graph <- igraphs_SLA3[[1]]
 
+w <- abs(E(graph)$fmri)
 
+ug <- set.edge.attribute(graph, name = "tmp_att", index = E(graph), value = w)
+ug <- as.undirected(ug, mode = "each", edge.attr.comb = list(tmp_att= "mean", "ignore"))
+graph <- ug
+w <- E(graph)$tmp_att
+
+rand_walk_weighted(graph, E(graph)$tmp_att, 1, 100)
+
+# cl <- makeCluster(1)
+# driver_exp(cl, 1, 1, 1000, pathIn.sla3, "s3", "prova.RData")
+# stopCluster(cl)

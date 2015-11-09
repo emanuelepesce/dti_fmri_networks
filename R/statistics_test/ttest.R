@@ -7,8 +7,8 @@ ncols <- dim(mat)[2]
 
 l_pvalues <- vector()
 
-tmu <- 0
-trh <- 0.1
+tmu <- 1e-05
+trh <- 0.01
 
 for(i in 1:nrows){
   values <- mat[i,]

@@ -5,7 +5,7 @@ library(miscTools)
 #' Calculate the mean of propagation of a group of subjects
 #' @param obj: object containing the times of propagation for subjects 
 #'              belonging at the same group
-#' @return mean of propagation time of a groups of subjects
+#' @return mean of propagation time of a group of subjects
 time_mean <- function(obj){
   n.sbj <- dim(obj)[1]
   
@@ -15,6 +15,28 @@ time_mean <- function(obj){
   }
   return(mean(mean.sbj))
 }
+
+#' Calculate the standard deviationof the means of propagation of a group of subjects
+#' @param obj: object containing the times of propagation for subjects 
+#'              belonging at the same group
+#' @return list:
+#'         - sd.group: standard deviationof propagation time of a group of subjects
+#'         - mean.sbj:  standard deviationof the means of a group
+time_sd <- function(obj){
+  n.sbj <- dim(obj)[1]
+  
+  mean.sbj <- vector(mode = "numeric", length = n.sbj)
+  sd.sbj  <- vector(mode = "numeric", length = n.sbj)
+  
+  for(i in 1:n.sbj){
+    mean.sbj[i] <- mean(obj[i,])
+    sd.sbj[i] <- sd(obj[i,])
+  }
+  
+  toRtrn <- list("sd.group" = sd(mean.sbj), "sd.sbj" = sd.sbj)
+  return(toRtrn)
+}
+
 
 #' Calculate k edges with max frequency
 #' @param obj: object containing the frequency of edges of a group
@@ -36,6 +58,32 @@ topK_freq <- function(obj, k, exgraph){
     edge.names <- get.vertex.attribute(exgraph, name = "roiName", edge.v)
     maxfreq.area_vs[i] <- edge.names[1]
     maxfreq.area_vt[i] <- edge.names[2]
+  }
+  
+  df <- data.frame(maxfreq.idx, maxfreq.value, maxfreq.area_vs, maxfreq.area_vt)
+  colnames(df) <- c("Index", "Value", "Area_From", "Area_To")
+  return(df)
+}
+
+#' Calculate k edges with max frequency
+#' @param obj: object containing the frequency of edges of a group
+#' @return data frame contaning a list of edges (id)
+topK_freq_id <- function(obj, k, exgraph){
+  maxfreq.idx <- vector(mode = "numeric", k)
+  maxfreq.value <- vector(mode = "numeric", k)
+  maxfreq.area_vs <- vector(mode = "logical", k)
+  maxfreq.area_vt <- vector(mode = "logical", k)
+  
+  
+  for(i in 1:k){
+    idx <- which.max(obj)
+    maxfreq.idx[i] <- idx
+    maxfreq.value[i] <- obj[idx]
+    obj[idx] <- 0
+    
+    edge.v <- ends(exgraph, idx)
+    maxfreq.area_vs[i] <- edge.v[1]
+    maxfreq.area_vt[i] <- edge.v[2]
   }
   
   df <- data.frame(maxfreq.idx, maxfreq.value, maxfreq.area_vs, maxfreq.area_vt)
@@ -91,7 +139,7 @@ calculate_order <- function(path){
   return(visited)
 }
 
-time_regions_avg <- function(obj){
+time_regions_avg <- function(obj, penalization = 25){
   
   time.sbj <- vector(length = 90, mode = "numeric") 
   
@@ -99,9 +147,15 @@ time_regions_avg <- function(obj){
     for(walk in 1:length(obj[[sbj]])){
       cur <- obj[[sbj]][[walk]]
       for (reg in 1:90){
-        idx <- which( cur == reg)
+        idx <- which(cur == reg)
         idx <- idx[1]
-        time.sbj[reg] <- idx
+        if(!is.na(idx)){
+          time.sbj[reg] <- idx
+        }
+        else{
+          # penalization
+          time.sbj[reg] <- penalization
+        }
       }
     }
     time.sbj <- time.sbj/length(obj[[sbj]])
@@ -125,13 +179,25 @@ time_regions_avg <- function(obj){
 #' @param graph.ex: an example graph for indacating the structure of dataset graph
 #' @param pathOut.obj: output where to save the result object
 prop_analysys <- function(data.all, freq.k = 10, graph.ex, pathOut.obj){
-  # ==== propagation time ====
-  time.groups <- vector(mode = "numeric", length = 3)
-  time.groups[1] <- time_mean(res.prop[[1]]$sbj_times)
-  time.groups[2] <- time_mean(res.prop[[2]]$sbj_times)
-  time.groups[3] <- time_mean(res.prop[[3]]$sbj_times)
+    # ==== mean propagation time ====
+  time.mean.groups <- vector(mode = "numeric", length = 3)
+  time.mean.groups[1] <- time_mean(res.prop[[1]]$sbj_times)
+  time.mean.groups[2] <- time_mean(res.prop[[2]]$sbj_times)
+  time.mean.groups[3] <- time_mean(res.prop[[3]]$sbj_times)
   
-  # ==== top frequency edge ====
+  # ==== standard deviationpropagation time ====
+  time.sd.groups <- vector(mode = "numeric", length = 3)
+  time.sd.groups[1] <- time_sd(res.prop[[1]]$sbj_times)$sd.group
+  time.sd.groups[2] <- time_sd(res.prop[[2]]$sbj_times)$sd.group
+  time.sd.groups[3] <- time_sd(res.prop[[3]]$sbj_times)$sd.group
+  
+  # ==== standard deviationpropagation time for each subject ====
+  time.sd.sbjs <- list()
+  time.sd.sbjs[[1]] <- time_sd(res.prop[[1]]$sbj_times)$sd.sbj
+  time.sd.sbjs[[2]] <- time_sd(res.prop[[2]]$sbj_times)$sd.sbj
+  time.sd.sbjs[[3]] <- time_sd(res.prop[[3]]$sbj_times)$sd.sbj
+  
+  # ==== top frequency edge names ====
   topfreq.groups <- list()
   k <- freq.k
   freq.ctrl <- res.prop[[1]]$f_edge/max(res.prop[[1]]$f_edge)
@@ -143,8 +209,23 @@ prop_analysys <- function(data.all, freq.k = 10, graph.ex, pathOut.obj){
   topfreq.groups[[1]] <- topK_freq(freq.ctrl, k, g)
   topfreq.groups[[2]] <- topK_freq(freq.sla2, k, g)
   topfreq.groups[[3]] <- topK_freq(freq.sla3, k, g)
+
+
+  # ==== top frequency edge ids ====
+  topfreq.groups.id <- list()
+  k <- freq.k
+  freq.ctrl <- res.prop[[1]]$f_edge/max(res.prop[[1]]$f_edge)
+  freq.sla2 <- res.prop[[2]]$f_edge/max(res.prop[[2]]$f_edge)
+  freq.sla3 <- res.prop[[3]]$f_edge/max(res.prop[[3]]$f_edge)
+  freq.ctrl <- res.prop[[1]]$f_edge/15
+  freq.sla2 <- res.prop[[2]]$f_edge/29
+  freq.sla3 <- res.prop[[3]]$f_edge/10
+  topfreq.groups.id[[1]] <- topK_freq_id(freq.ctrl, k, g)
+  topfreq.groups.id[[2]] <- topK_freq_id(freq.sla2, k, g)
+  topfreq.groups.id[[3]] <- topK_freq_id(freq.sla3, k, g)
   
-  # ==== top frequency edge ====
+  
+  # ====  average path ====
   avgwalk.groups <- list()
   k <- 10
   avgwalk.groups[[1]] <- average_walk(res.prop[[1]]$sbj_history, g)
@@ -156,7 +237,7 @@ prop_analysys <- function(data.all, freq.k = 10, graph.ex, pathOut.obj){
                            avgwalk.groups[[3]]$Area)
   
   colnames(df.avgwalk) <- c("Controls", "Sla2", "Sla3")
-  
+
   
   # ==== Time Matrix ==== 
   time.regions <- list()
@@ -164,10 +245,18 @@ prop_analysys <- function(data.all, freq.k = 10, graph.ex, pathOut.obj){
   time.regions[[2]] <- time_regions_avg(res.prop[[2]]$sbj_history)
   time.regions[[3]] <- time_regions_avg(res.prop[[3]]$sbj_history)
   
+  roiNames <- V(graph.ex)$roiName
+  df.time.regions <- data.frame(roiNames, time.regions[[1]], time.regions[[2]], 
+                                time.regions[[3]])
+  colnames(df.time.regions) <- c("Region", "Controls", "Sla2", "Sla3")
   
-  analysis.prop <- list("time.mean" = time.groups,
-                        "time.regions" = time.regions,
-                        "freq.topK" = topfreq.groups,
+  
+  analysis.prop <- list("time.mean.groups" = time.mean.groups,
+                        "time.sd.groups" = time.sd.groups,
+                        "time.sd.subjects" = time.sd.sbjs,
+                        "time.regions" = df.time.regions,
+                        "freq.topK.names" = topfreq.groups,
+                        "freq.topK.id" = topfreq.groups.id,
                         "walks.avg" = df.avgwalk
                         )
   
