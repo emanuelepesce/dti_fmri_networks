@@ -15,6 +15,9 @@ pathOut.save <- "./../../data/results/propagation/random_walk/borda/dti/analysis
 
 g <- read.graph(pathIn.graph_ex, format = "graphml")
 
+
+freq.k <- 100
+
 pathOut.obj <- "./analysis_complete.RData"
 
 res.prop <- list()
@@ -25,14 +28,11 @@ res.prop[[2]] <- data.prop
 load(pathIn.sla3) 
 res.prop[[3]] <- data.prop
 
-prop_analysys(res.prop, freq.k = freq.k, g, pathOut.obj)
-load(pathOut.obj)
-save(analysis.prop, file = pathOut.save)
-analysis.prop
+res <- prop_analysys(res.prop, freq.k = freq.k, g, pathOut.save)
 
 
 # ================================ Region 2 ==============================
-path.base <- "./../../data/results/propagation/rand_walk_complete/borda_sw_004/server_dti_complete_r1/"
+path.base <- "./../../data/results/propagation/rand_walk_complete/borda_sw_004/server_dti_complete_r2/"
 pathIn.ctrl <- "./random_walk/borda/dti/prop_ctrl_dti_r2.RData"
 pathIn.sla2 <- "./random_walk/borda/dti/prop_sla2_dti_r2.RData"
 pathIn.sla3 <- "./random_walk/borda/dti/prop_sla3_dti_r2.RData"
@@ -43,6 +43,9 @@ pathOut.save <- "./../../data/results/propagation/random_walk/borda/dti/analysis
 
 g <- read.graph(pathIn.graph_ex, format = "graphml")
 
+freq.k = 100
+
+
 pathOut.obj <- "./analysis_complete.RData"
 
 res.prop <- list()
@@ -53,14 +56,12 @@ res.prop[[2]] <- data.prop
 load(pathIn.sla3) 
 res.prop[[3]] <- data.prop
 
-prop_analysys(res.prop, freq.k = freq.k, g, pathOut.obj)
-load(pathOut.obj)
-save(analysis.prop, file = pathOut.save)
-analysis.prop
+res <- prop_analysys(res.prop, freq.k = freq.k, g, pathOut.save)
+
 
 
 # ================================ Region 67 ==============================
-path.base <- "./../../data/results/propagation/rand_walk_complete/borda_sw_004/server_dti_complete_r1/"
+path.base <- "./../../data/results/propagation/rand_walk_complete/borda_sw_004/server_dti_complete_r67/"
 pathIn.ctrl <- "./random_walk/borda/dti/prop_ctrl_dti_r67.RData"
 pathIn.sla2 <- "./random_walk/borda/dti/prop_sla2_dti_r67.RData"
 pathIn.sla3 <- "./random_walk/borda/dti/prop_sla3_dti_r67.RData"
@@ -83,14 +84,12 @@ res.prop[[2]] <- data.prop
 load(pathIn.sla3) 
 res.prop[[3]] <- data.prop
 
-prop_analysys(res.prop, freq.k = freq.k, g, pathOut.obj)
-load(pathOut.obj)
-save(analysis.prop, file = pathOut.save)
-analysis.prop
+res <- prop_analysys(res.prop, freq.k = freq.k, g, pathOut.save)
+
 
 
 # ================================ Region 68 ==============================
-path.base <- "./../../data/results/propagation/rand_walk_complete/borda_sw_004/server_dti_complete_r1/"
+path.base <- "./../../data/results/propagation/rand_walk_complete/borda_sw_004/server_dti_complete_r68/"
 pathIn.ctrl <- "./random_walk/borda/dti/prop_ctrl_dti_r68.RData"
 pathIn.sla2 <- "./random_walk/borda/dti/prop_sla2_dti_r68.RData"
 pathIn.sla3 <- "./random_walk/borda/dti/prop_sla3_dti_r68.RData"
@@ -111,7 +110,4 @@ res.prop[[2]] <- data.prop
 load(pathIn.sla3) 
 res.prop[[3]] <- data.prop
 
-prop_analysys(res.prop, freq.k = freq.k, g, pathOut.obj)
-load(pathOut.obj)
-save(analysis.prop, file = pathOut.save)
-analysis.prop
+res <- prop_analysys(res.prop, freq.k = freq.k, g, pathOut.save)

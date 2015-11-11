@@ -261,4 +261,5 @@ prop_analysys <- function(data.all, freq.k = 10, graph.ex, pathOut.obj){
                         )
   
   save(analysis.prop, file = pathOut.obj)
+  return(analysis.prop)
 }

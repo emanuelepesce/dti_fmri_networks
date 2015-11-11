@@ -22,7 +22,8 @@ rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
   cnt <- 0 
   while( (length(v_visited) < 90) && (cnt <= maxiter) ){
     cnt <- cnt + 1
-    
+    print(cnt)
+    print(length(v_visited))
     # update history
     v_history <- c(v_history, walker)
     
@@ -37,7 +38,7 @@ rand_walk_weighted <- function(graph, weights, seed, maxiter = 3000){
     
     # if there are no neighbors stop it
     if(n_neighs < 1){
-      cnt = maxiter
+      cnt = maxiter + 1
     }
     else{
       # get neighbors weights
@@ -80,11 +81,13 @@ myRandWalk <- function(idx, graphs, seed, times, maxiter = 4000){
   f_edge <- rep(0, length = ecount(graph))
   
   # ===== Here choose weights =====
-  w.fmri <- abs(E(graph)$fmri)
-  w.dti <- E(graph)$dti
-  w <- w.fmri * w.dti
+  w  <- abs(E(graph)$fmri)
   
+  graph <- set.edge.attribute(graph, name = "n_att", index = E(graph), value = w)
+  ug <- as.undirected(graph, mode = "collapse", edge.attr.comb = list(n_att="mean", "ignore"))
+  w  <- abs(E(ug)$n_att)
   
+  graph <- ug
   
   # run random walk
   v_times <- vector(mode = "numeric", length = times)
@@ -169,5 +172,14 @@ driver_exp <- function(cl, seed, times, maxiter, pathIn, group, pathOut){
   save(data.prop, file = pathOut)
 }
 
+#' @examples
+path <- "./../../../data/graphs_integration/t_test/Controls/CTRL_amore.graphml"
+g <- read.graph(path, format = "graphml")
 
+w  <- abs(E(g)$fmri)
 
+g <- set.edge.attribute(g, name = "n_att", index = E(g), value = w)
+ug <- as.undirected(g, mode = "collapse", edge.attr.comb = list(n_att="mean", "ignore"))
+w  <- abs(E(ug)$n_att)
+
+rand_walk_weighted(ug, w, 1)
